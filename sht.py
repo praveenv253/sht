@@ -105,13 +105,13 @@ def isht(flm, thetas, phis, intermediates=None):
     P = intermediates['P']
 
     # Initialize return vector
-    f = np.zeros(flm.size)
+    f = np.zeros(flm.size, dtype=complex)
 
     for m in range(L):
         ls = np.arange(m, L)
-        gm = 2 * np.pi * np.einsum('i...,ki->k...', flm[ls**2 + ls + m], P[m])
-        gm_neg = 2 * np.pi * np.einsum('i...,ki->k...', flm[ls**2 + ls - m],
-                                       (-1)**m * P[m])
+        gm = np.einsum('i...,ki->k...', flm[ls**2 + ls + m], P[m])
+        gm_neg = np.einsum('i...,ki->k...', flm[ls**2 + ls - m],
+                           (-1)**m * P[m])
         for k in range(m, L):
             # Extend dimensions of phi for proper broadcasting with g
             ext_indices = ((slice(k**2, (k+1)**2),)
@@ -119,8 +119,8 @@ def isht(flm, thetas, phis, intermediates=None):
             if m == 0:
                 f_tilde = gm[k] / (2 * np.pi)
             else:
-                f_tilde = ((np.exp(1j * m * phis[ext_indices]) * gm[k]
-                            + np.exp(1j * m * phis[ext_indices]) * gm_neg[k])
+                f_tilde = ((np.exp(-1j * m * phis[ext_indices]) * gm_neg[k-m]
+                            + np.exp(1j * m * phis[ext_indices]) * gm[k-m])
                            / (2 * np.pi))
             f[k**2:(k+1)**2] += f_tilde
 
