@@ -25,7 +25,7 @@ if __name__ == '__main__':
     #m = 1
     #flm = np.zeros(L**2)
     #flm[l**2 + l + m] = 1
-    flm = np.random.randn(L**2)
+    flm = np.random.randn(L**2, 2)
     #print(flm)
 
     # Compare with transform matrix

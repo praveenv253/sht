@@ -57,14 +57,14 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
     g = np.zeros((L, 2 * L - 1) + f.shape[1:], dtype=complex)
 
     # Intialize result vector
-    flm = np.zeros(f.size, dtype=complex)
+    flm = np.zeros(f.shape, dtype=complex)
 
     for m in reversed(range(L)):
         # Update g by computing gm
         # Perform (2m+1)-point FFT of the m'th phi-ring
         # The sampling of f is from -m to m, whereas for the FFT, we need it to
         # be from 0 to 2m+1. Hence the ifftshift.
-        temp = np.fft.fft(np.fft.ifftshift(f[m**2:(m+1)**2]),
+        temp = np.fft.fft(np.fft.ifftshift(f[m**2:(m+1)**2], axes=0),
                           axis=0) * 2 * np.pi / (2*m+1)
         # Add this to the main matrix g
         g[m, :m+1] = temp[:m+1]
@@ -90,8 +90,8 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
             # Extend dimensions of phi for proper broadcasting with g
             ext_indices = ((slice(k**2, (k+1)**2),)
                            + (None,) * (len(f.shape) - 1))
-            f_tilde = ((np.exp(1j * m * phis[ext_indices]) * gm[k]
-                        + np.exp(-1j * m * phis[ext_indices]) * gm_neg[k])
+            f_tilde = ((np.exp(1j * m * phis[ext_indices]) * gm[[k]]
+                        + np.exp(-1j * m * phis[ext_indices]) * gm_neg[[k]])
                        / (2 * np.pi))
             f[k**2:(k+1)**2] -= f_tilde
 
@@ -120,7 +120,7 @@ def isht(flm, thetas, phis, intermediates=None):
     P = intermediates['P']
 
     # Initialize return vector
-    f = np.zeros(flm.size, dtype=complex)
+    f = np.zeros(flm.shape, dtype=complex)
 
     for m in range(L):
         ls = np.arange(m, L)
@@ -132,10 +132,10 @@ def isht(flm, thetas, phis, intermediates=None):
             ext_indices = ((slice(k**2, (k+1)**2),)
                            + (None,) * (len(f.shape) - 1))
             if m == 0:
-                f_tilde = gm[k] / (2 * np.pi)
+                f_tilde = gm[[k]] / (2 * np.pi)
             else:
-                f_tilde = ((np.exp(-1j * m * phis[ext_indices]) * gm_neg[k]
-                            + np.exp(1j * m * phis[ext_indices]) * gm[k])
+                f_tilde = ((np.exp(-1j * m * phis[ext_indices]) * gm_neg[[k]]
+                            + np.exp(1j * m * phis[ext_indices]) * gm[[k]])
                            / (2 * np.pi))
             f[k**2:(k+1)**2] += f_tilde
 
