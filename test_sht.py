@@ -17,10 +17,12 @@ if __name__ == '__main__':
     L = 3
     thetas, phis = standard_grid(L)
 
+    np.set_printoptions(linewidth=400, precision=4)
+
     # Test signal defined in spherical harmonic domain, and then converted to
     # spatial domain
-    l = 0
-    m = 0
+    l = 1
+    m = 1
     flm = np.zeros(L**2)
     flm[l**2 + l + m] = 1
     #flm = np.random.randn(L**2)

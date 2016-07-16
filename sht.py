@@ -83,15 +83,14 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
             # Extend dimensions of phi for proper broadcasting with g
             ext_indices = ((slice(k**2, (k+1)**2),)
                            + (None,) * (len(f.shape) - 1))
-            f_tilde = ((np.exp(1j * m * phis[ext_indices]) * g[[m,], m]
-                        + np.exp(-1j * m * phis[ext_indices]) * g[[m,], -m])
+            f_tilde = ((np.exp(1j * m * phis[ext_indices]) * g[[k,], m]
+                        + np.exp(-1j * m * phis[ext_indices]) * g[[k,], -m])
                        / (2 * np.pi))
             f[k**2:(k+1)**2] -= f_tilde
 
         if return_error and m == 0:
             # Compute error by subtracting one last time if desired
-            ext_indices = ((slice(k**2, (k+1)**2),)
-                           + (None,) * (len(f.shape) - 1))
+            ext_indices = (slice(0, (1)**2),) + (None,) * (len(f.shape) - 1)
             f_tilde = (np.exp(1j * m * phis[ext_indices]) * g[[m,], m]
                        / (2 * np.pi))
             f[0:1] -= f_tilde
