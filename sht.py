@@ -29,7 +29,7 @@ def _compute_P(thetas):
     return P
 
 
-def sht(f_, thetas, phis, intermediates=None):
+def sht(f_, thetas, phis, intermediates=None, return_error=False):
     """
     Computes the spherical harmonic transform of f, for the grid specified by
     thetas and phis. This grid must conform to a specific format.
@@ -62,19 +62,21 @@ def sht(f_, thetas, phis, intermediates=None):
     for m in reversed(range(L)):
         # Update g by computing gm
         # Perform (2m+1)-point FFT of the m'th phi-ring
-        temp = np.fft.fft(f[m**2:(m+1)**2], axis=0)
+        temp = np.fft.fft(f[m**2:(m+1)**2], axis=0) * 2 * np.pi / (2*m+1)
         # Add this to the main matrix g
         g[m, :m+1] = temp[:m+1]
         g[m, (2*L-1-m):] = temp[m+1:]
 
         # Solve for fm and fm_neg
         fm = la.solve(P[m][m:, :], g[m:, m])
-        fm_neg = la.solve((-1)**m * P[m][m:, :], g[m:, -m])
+        if m > 0:
+            fm_neg = la.solve((-1)**m * P[m][m:, :], g[m:, -m])
 
         # Store results
         ls = np.arange(m, L)
         flm[ls**2 + ls + m] = fm
-        flm[ls**2 + ls - m] = fm_neg
+        if m > 0:
+            flm[ls**2 + ls - m] = fm_neg
 
         for k in range(m):
             # Note: we won't enter this loop if m==0
@@ -86,10 +88,16 @@ def sht(f_, thetas, phis, intermediates=None):
                        / (2 * np.pi))
             f[k**2:(k+1)**2] -= f_tilde
 
-        if m == 0:
+        if return_error and m == 0:
             # Compute error by subtracting one last time if desired
-            pass
+            ext_indices = ((slice(k**2, (k+1)**2),)
+                           + (None,) * (len(f.shape) - 1))
+            f_tilde = (np.exp(1j * m * phis[ext_indices]) * g[[m,], m]
+                       / (2 * np.pi))
+            f[0:1] -= f_tilde
 
+    if return_error:
+        return flm, f
     return flm
 
 
