@@ -24,7 +24,7 @@ def _compute_P(thetas):
     P = []  # List of all Pm's
     for m in range(L):
         ls = np.arange(m, L)
-        Pm = spl.sph_harm(m, ls[np.newaxis, :], 0, thetas[m:, np.newaxis])
+        Pm = spl.sph_harm(m, ls[np.newaxis, :], 0, thetas[:, np.newaxis])
         P.append(2 * np.pi * Pm)
     return P
 
@@ -54,10 +54,10 @@ def sht(f_, thetas, phis, intermediates=None):
     # The l'th row is the FFT of the ring corresponding to theta[l].
     # The m'th column (excluding the unused entries) is essentially gm.
     # Thus, gm is valid only when |m| <= l, and is best indexed from -m to m.
-    g = np.zeros((L, 2 * L - 1) + f.shape[1:])
+    g = np.zeros((L, 2 * L - 1) + f.shape[1:], dtype=complex)
 
     # Intialize result vector
-    flm = np.zeros(f.size)
+    flm = np.zeros(f.size, dtype=complex)
 
     for m in reversed(range(L)):
         # Update g by computing gm
@@ -65,11 +65,11 @@ def sht(f_, thetas, phis, intermediates=None):
         temp = np.fft.fft(f[m**2:(m+1)**2], axis=0)
         # Add this to the main matrix g
         g[m, :m+1] = temp[:m+1]
-        g[m, m-m:] = temp[m-m:]
+        g[m, (2*L-1-m):] = temp[m+1:]
 
         # Solve for fm and fm_neg
-        fm = la.solve(P[m], g[m:, m])
-        fm_neg = la.solve((-1)**m * P[m], g[m:, -m])
+        fm = la.solve(P[m][m:, :], g[m:, m])
+        fm_neg = la.solve((-1)**m * P[m][m:, :], g[m:, -m])
 
         # Store results
         ls = np.arange(m, L)
@@ -112,15 +112,15 @@ def isht(flm, thetas, phis, intermediates=None):
         gm = np.einsum('i...,ki->k...', flm[ls**2 + ls + m], P[m])
         gm_neg = np.einsum('i...,ki->k...', flm[ls**2 + ls - m],
                            (-1)**m * P[m])
-        for k in range(m, L):
+        for k in range(L):
             # Extend dimensions of phi for proper broadcasting with g
             ext_indices = ((slice(k**2, (k+1)**2),)
                            + (None,) * (len(f.shape) - 1))
             if m == 0:
                 f_tilde = gm[k] / (2 * np.pi)
             else:
-                f_tilde = ((np.exp(-1j * m * phis[ext_indices]) * gm_neg[k-m]
-                            + np.exp(1j * m * phis[ext_indices]) * gm[k-m])
+                f_tilde = ((np.exp(-1j * m * phis[ext_indices]) * gm_neg[k]
+                            + np.exp(1j * m * phis[ext_indices]) * gm[k])
                            / (2 * np.pi))
             f[k**2:(k+1)**2] += f_tilde
 
