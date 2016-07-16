@@ -14,33 +14,36 @@ from test_utils import get_transform_matrix
 
 
 if __name__ == '__main__':
-    L = 3
+    L = 20
     thetas, phis = standard_grid(L)
 
-    np.set_printoptions(linewidth=400, precision=4)
+    #np.set_printoptions(linewidth=400, precision=4)
 
     # Test signal defined in spherical harmonic domain, and then converted to
     # spatial domain
-    l = 1
-    m = 1
-    flm = np.zeros(L**2)
-    flm[l**2 + l + m] = 1
-    #flm = np.random.randn(L**2)
-    print(flm)
+    #l = 1
+    #m = 1
+    #flm = np.zeros(L**2)
+    #flm[l**2 + l + m] = 1
+    flm = np.random.randn(L**2)
+    #print(flm)
 
     # Compare with transform matrix
     ylms = get_transform_matrix(thetas, phis, L)
     f_true = np.dot(ylms.T, flm)
     #io.savemat('f_true.mat', {'f': f_true})
-    print(f_true)
+    #print(f_true)
 
     intermediates = {}
     flm_recovered = sht(f_true, thetas, phis, intermediates)
-    print(flm_recovered)
 
-    #print(np.real(f) / np.real(f_true))
-    #print(np.imag(f) / np.imag(f_true))
-    print(np.abs(flm_recovered - flm))
+    #print()
+    #print(flm_recovered)
+
+    #print(flm_recovered / flm)
+    #print(np.real(flm_recovered) / np.real(flm))
+    #print(np.imag(flm_recovered) / np.imag(flm))
+    print(np.abs(flm_recovered - flm) < 1e-13)
 
     #plt.plot(f)
     #plt.plot(f_true)

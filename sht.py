@@ -62,7 +62,10 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
     for m in reversed(range(L)):
         # Update g by computing gm
         # Perform (2m+1)-point FFT of the m'th phi-ring
-        temp = np.fft.fft(f[m**2:(m+1)**2], axis=0) * 2 * np.pi / (2*m+1)
+        # The sampling of f is from -m to m, whereas for the FFT, we need it to
+        # be from 0 to 2m+1. Hence the ifftshift.
+        temp = np.fft.fft(np.fft.ifftshift(f[m**2:(m+1)**2]),
+                          axis=0) * 2 * np.pi / (2*m+1)
         # Add this to the main matrix g
         g[m, :m+1] = temp[:m+1]
         g[m, (2*L-1-m):] = temp[m+1:]
@@ -78,24 +81,29 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
         if m > 0:
             flm[ls**2 + ls - m] = fm_neg
 
+        # Compute gm for the *other* thetas
+        gm = np.einsum('i...,ki->k...', fm, P[m][:m, :])
+        if m > 0:
+            gm_neg = np.einsum('i...,ki->k...', fm_neg, (-1)**m * P[m][:m, :])
         for k in range(m):
             # Note: we won't enter this loop if m==0
             # Extend dimensions of phi for proper broadcasting with g
             ext_indices = ((slice(k**2, (k+1)**2),)
                            + (None,) * (len(f.shape) - 1))
-            f_tilde = ((np.exp(1j * m * phis[ext_indices]) * g[[k,], m]
-                        + np.exp(-1j * m * phis[ext_indices]) * g[[k,], -m])
+            f_tilde = ((np.exp(1j * m * phis[ext_indices]) * gm[k]
+                        + np.exp(-1j * m * phis[ext_indices]) * gm_neg[k])
                        / (2 * np.pi))
             f[k**2:(k+1)**2] -= f_tilde
 
-        if return_error and m == 0:
-            # Compute error by subtracting one last time if desired
-            ext_indices = (slice(0, (1)**2),) + (None,) * (len(f.shape) - 1)
-            f_tilde = (np.exp(1j * m * phis[ext_indices]) * g[[m,], m]
-                       / (2 * np.pi))
-            f[0:1] -= f_tilde
+        #if return_error and m == 0:
+        #    # Compute error by subtracting one last time if desired
+        #    ext_indices = (slice(0, (1)**2),) + (None,) * (len(f.shape) - 1)
+        #    f_tilde = (np.exp(1j * m * phis[ext_indices]) * g[[m,], m]
+        #               / (2 * np.pi))
+        #    f[0:1] -= f_tilde
 
     if return_error:
+        # XXX f is not exactly error. This needs to be checked.
         return flm, f
     return flm
 
