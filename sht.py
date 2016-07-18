@@ -29,7 +29,7 @@ def _compute_P(thetas):
     return P
 
 
-def sht(f_, thetas, phis, intermediates=None, return_error=False):
+def sht(f_, thetas, phis, intermediates={}, return_error=False):
     """
     Computes the spherical harmonic transform of f, for the grid specified by
     thetas and phis. This grid must conform to a specific format.
@@ -108,7 +108,7 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
     return flm
 
 
-def isht(flm, thetas, phis, intermediates=None):
+def isht(flm, thetas, phis, intermediates={}):
     """
     Computes the inverse spherical harmonic transform.
     """
