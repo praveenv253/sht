@@ -37,7 +37,7 @@ def sht(f_, thetas, phis, intermediates={}, return_error=False):
     Currently, f can be at most two dimensional. The first dimension will be
     transformed.
     """
-    f = f_.copy()    # Shouldn't corrupt the original
+    f = f_.copy().astype(complex)    # Shouldn't corrupt the original
     L = thetas.size
 
     # Check intermediates for P, and compute it if absent
