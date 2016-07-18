@@ -37,3 +37,14 @@ def l_to_lm(xl, axis=-1, fill_zeros=False):
             indices_rhs[axis] = [i, ]
             xlm[indices_lhs] = xl[indices_rhs]
     return xlm
+
+
+def get_cartesian_grid(thetas, phis):
+    """
+    Converts a list of thetas and phis into a cartesian grid.
+    """
+    thetas = l_to_lm(thetas)
+    x = np.sin(thetas) * np.cos(phis)
+    y = np.sin(thetas) * np.sin(phis)
+    z = np.cos(thetas)
+    return np.vstack((x, y, z)).T
