@@ -46,6 +46,7 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
     elif 'P' in intermediates:  # Caller provided P
         P = intermediates['P']
     else:                       # Caller wants P
+        P = _compute_P(thetas)
         intermediates['P'] = P
 
     # Initialize g: for L=4, it looks like this when complete:
@@ -123,6 +124,7 @@ def isht(flm, thetas, phis, intermediates=None):
     elif 'P' in intermediates:  # Caller provided P
         P = intermediates['P']
     else:                       # Caller wants P
+        P = _compute_P(thetas)
         intermediates['P'] = P
 
     # Initialize return vector
