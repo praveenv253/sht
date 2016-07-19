@@ -29,7 +29,7 @@ def _compute_P(thetas):
     return P
 
 
-def sht(f_, thetas, phis, intermediates={}, return_error=False):
+def sht(f_, thetas, phis, intermediates=None, return_error=False):
     """
     Computes the spherical harmonic transform of f, for the grid specified by
     thetas and phis. This grid must conform to a specific format.
@@ -41,9 +41,12 @@ def sht(f_, thetas, phis, intermediates={}, return_error=False):
     L = thetas.size
 
     # Check intermediates for P, and compute it if absent
-    if 'P' not in intermediates:
-        intermediates['P'] = _compute_P(thetas)
-    P = intermediates['P']
+    if intermediates is None:   # Caller not using intermediates
+        P = _compute_P(thetas)
+    elif 'P' in intermediates:  # Caller provided P
+        P = intermediates['P']
+    else:                       # Caller wants P
+        intermediates['P'] = P
 
     # Initialize g: for L=4, it looks like this when complete:
     #  0  *  *  *  *  *  *
@@ -108,16 +111,19 @@ def sht(f_, thetas, phis, intermediates={}, return_error=False):
     return flm
 
 
-def isht(flm, thetas, phis, intermediates={}):
+def isht(flm, thetas, phis, intermediates=None):
     """
     Computes the inverse spherical harmonic transform.
     """
     L = thetas.size
 
     # Check intermediates for P, and compute it if absent
-    if 'P' not in intermediates:
-        intermediates['P'] = _compute_P(thetas)
-    P = intermediates['P']
+    if intermediates is None:   # Caller not using intermediates
+        P = _compute_P(thetas)
+    elif 'P' in intermediates:  # Caller provided P
+        P = intermediates['P']
+    else:                       # Caller wants P
+        intermediates['P'] = P
 
     # Initialize return vector
     f = np.zeros(flm.shape, dtype=complex)
