@@ -39,6 +39,27 @@ def l_to_lm(xl, axis=-1, fill_zeros=False):
     return xlm
 
 
+def argsort_thetaphi_wrt_theta(thetas):
+    """
+    For a given thetas vector, return indices that will convert the usual
+    ordering of the L**2-length vector (in order of increasing number of phi-
+    points) into the order corresponding to monotonically increasing theta
+    (from 0 to pi).
+    This is useful for plotting the L**2-length signal in 1 dimension, so that
+    the signal can still be partially interpreted as increasing in theta over
+    the x-axis.
+    """
+    L = thetas.size
+    theta_sort_indices = np.argsort(thetas)
+    result = np.empty(L**2, dtype=int)
+    count = 0
+    for i in theta_sort_indices:
+        indices = np.arange(2 * i + 1)
+        result[count + indices] = i ** 2 + indices
+        count += 2 * i + 1
+    return result
+
+
 def get_cartesian_grid(thetas, phis):
     """
     Converts a list of thetas and phis into a cartesian grid.
