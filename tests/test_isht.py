@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from scipy import io
 
 from sht import isht
-from grids import standard_grid
-from utils import l_to_lm
+from sht.grids import standard_grid
+from sht.utils import l_to_lm
 from test_utils import get_transform_matrix
 
 

@@ -89,6 +89,7 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
         gm = np.einsum('i...,ki->k...', fm, P[m][:m, :])
         if m > 0:
             gm_neg = np.einsum('i...,ki->k...', fm_neg, (-1)**m * P[m][:m, :])
+
         for k in range(m):
             # Note: we won't enter this loop if m==0
             # Extend dimensions of phi for proper broadcasting with g

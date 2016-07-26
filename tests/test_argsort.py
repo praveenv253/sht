@@ -6,8 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sht import isht
-from grids import standard_grid
-from utils import l_to_lm, argsort_thetaphi_wrt_theta
+from sht.grids import standard_grid
+from sht.utils import l_to_lm, argsort_thetaphi_wrt_theta
 
 if __name__ == '__main__':
     L = 10
