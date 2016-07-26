@@ -13,7 +13,7 @@ from sht.utils import l_to_lm
 from test_utils import get_transform_matrix
 
 
-if __name__ == '__main__':
+def test_sht():
     L = 20
     thetas, phis = standard_grid(L)
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     #print(flm_recovered / flm)
     #print(np.real(flm_recovered) / np.real(flm))
     #print(np.imag(flm_recovered) / np.imag(flm))
-    print(np.abs(flm_recovered - flm) < 1e-13)
+    assert np.all(np.abs(flm_recovered - flm) < 1e-12)
 
     #plt.plot(f)
     #plt.plot(f_true)
