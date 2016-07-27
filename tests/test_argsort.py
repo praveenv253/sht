@@ -3,7 +3,6 @@
 from __future__ import print_function, division
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 from sht import isht
 from sht.grids import standard_grid

@@ -3,7 +3,6 @@
 from __future__ import print_function, division
 
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy import io
 
 from sht import isht
@@ -42,7 +41,3 @@ def test_isht():
     #print(np.real(f) / np.real(f_true))
     #print(np.imag(f) / np.imag(f_true))
     assert np.all(np.abs(f - f_true) < 1e-12)
-
-    #plt.plot(f)
-    #plt.plot(f_true)
-    #plt.show()

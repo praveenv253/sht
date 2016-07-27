@@ -3,7 +3,6 @@
 from __future__ import print_function, division
 
 import numpy as np
-import matplotlib.pyplot as plt
 import scipy.special as spl
 from scipy import io
 
@@ -44,7 +43,3 @@ def test_sht():
     #print(np.real(flm_recovered) / np.real(flm))
     #print(np.imag(flm_recovered) / np.imag(flm))
     assert np.all(np.abs(flm_recovered - flm) < 1e-12)
-
-    #plt.plot(f)
-    #plt.plot(f_true)
-    #plt.show()

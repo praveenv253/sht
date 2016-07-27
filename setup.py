@@ -9,7 +9,7 @@ setup(
     author='Praveen Venkatesh',
     url='https://github.com/praveenv253/sht',
     packages=['sht', ],
-    install_requires=['numpy', 'scipy', 'matplotlib', ],
+    install_requires=['numpy', 'scipy', ],
     setup_requires=['pytest-runner', ],
     tests_require=['pytest', ],
     license='MIT',
