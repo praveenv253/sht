@@ -24,20 +24,28 @@ def test_isht():
     #flm[l**2 + l + m] = 1
     flm = np.random.randn(L**2, 2)
 
-    # Test isht
-    intermediates = {}
-    f = isht(flm, thetas, phis, intermediates)
-    io.savemat('f.mat', {'f': f})
-    #print(f)
-    #print()
-
     # Compare with transform matrix
     ylms = get_transform_matrix(thetas, phis, L)
     f_true = np.dot(ylms.T, flm)
-    io.savemat('f_true.mat', {'f': f_true})
+
+    # Test isht
+    intermediates = {}
+    f = isht(flm, thetas, phis, intermediates)
+    assert np.all(np.abs(f - f_true) < 1e-12)
+
+    f = isht(flm, thetas, phis, intermediates)
+    assert np.all(np.abs(f - f_true) < 1e-12)
+
+    f = isht(flm, thetas, phis)
+    assert np.all(np.abs(f - f_true) < 1e-12)
+
+    #io.savemat('f.mat', {'f': f})
+    #print(f)
+    #print()
+
+    #io.savemat('f_true.mat', {'f': f_true})
     #print(f_true)
     #print()
 
     #print(np.real(f) / np.real(f_true))
     #print(np.imag(f) / np.imag(f_true))
-    assert np.all(np.abs(f - f_true) < 1e-12)

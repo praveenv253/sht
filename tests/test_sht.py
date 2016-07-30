@@ -35,6 +35,13 @@ def test_sht():
 
     intermediates = {}
     flm_recovered = sht(f_true, thetas, phis, intermediates)
+    assert np.all(np.abs(flm_recovered - flm) < 1e-12)
+
+    flm_recovered = sht(f_true, thetas, phis, intermediates)
+    assert np.all(np.abs(flm_recovered - flm) < 1e-12)
+
+    flm_recovered = sht(f_true, thetas, phis)
+    assert np.all(np.abs(flm_recovered - flm) < 1e-12)
 
     #print()
     #print(flm_recovered)
@@ -42,4 +49,3 @@ def test_sht():
     #print(flm_recovered / flm)
     #print(np.real(flm_recovered) / np.real(flm))
     #print(np.imag(flm_recovered) / np.imag(flm))
-    assert np.all(np.abs(flm_recovered - flm) < 1e-12)
