@@ -8,7 +8,7 @@ from scipy import io
 from sht import isht
 from sht.grids import standard_grid
 from sht.utils import l_to_lm
-from .test_utils import get_transform_matrix
+from .utils import get_transform_matrix
 
 
 def test_isht():
