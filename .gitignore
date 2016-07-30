@@ -1,2 +1,11 @@
 # Ignore matlab data files
 *.mat
+
+# Ignore python2 cahces
+*.pyc
+# Ignore the python3 cache
+__pycache__/*
+
+# Ignore the files created during coverage tests
+.coverage
+.cache/*
