@@ -32,3 +32,6 @@ before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 script: py.test --cov-report= --cov=sht tests/
 after_success: codecov
+addons:
+  code_climate:
+    repo_token: 5f858f87bc65c3cdcda1f0a977d5c40dc84cf9498d087eeaf5791a56edbb863e
