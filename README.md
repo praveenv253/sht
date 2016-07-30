@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/praveenv253/sht.svg?branch=master)](https://travis-ci.org/praveenv253/sht)
+[![Build Status](https://travis-ci.org/praveenv253/sht.svg?branch=master)](https://travis-ci.org/praveenv253/sht) [![codecov](https://codecov.io/gh/praveenv253/sht/branch/master/graph/badge.svg)](https://codecov.io/gh/praveenv253/sht)
+
 
 sht
 ===
