@@ -24,6 +24,19 @@ def test_l_to_lm():
     z = np.delete(z, l**2 + l)
     assert np.array_equal(z, np.zeros(L**2 - L))
 
+    # Test with axis
+    p = 5
+    q = 7
+    x = np.random.randn(p, q)
+    y = l_to_lm(x)
+    assert y.shape == (p, q**2)
+    y = l_to_lm(x, axis=0)
+    assert y.shape == (p**2, q)
+    y = l_to_lm(x, axis=-2)
+    assert y.shape == (p**2, q)
+    y = l_to_lm(x, axis=1)
+    assert y.shape == (p, q**2)
+
 
 def test_argsort():
     L = 10
