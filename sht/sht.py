@@ -29,7 +29,7 @@ def _compute_P(thetas):
     return P
 
 
-def sht(f_, thetas, phis, intermediates=None, return_error=False):
+def sht(f_, thetas, phis, intermediates=None):
     """
     Computes the spherical harmonic transform of f, for the grid specified by
     thetas and phis. This grid must conform to a specific format.
@@ -100,16 +100,6 @@ def sht(f_, thetas, phis, intermediates=None, return_error=False):
                        / (2 * np.pi))
             f[k**2:(k+1)**2] -= f_tilde
 
-        #if return_error and m == 0:
-        #    # Compute error by subtracting one last time if desired
-        #    ext_indices = (slice(0, (1)**2),) + (None,) * (len(f.shape) - 1)
-        #    f_tilde = (np.exp(1j * m * phis[ext_indices]) * g[[m,], m]
-        #               / (2 * np.pi))
-        #    f[0:1] -= f_tilde
-
-    if return_error:
-        # XXX f is not exactly error. This needs to be checked.
-        return flm, f
     return flm
 
 
