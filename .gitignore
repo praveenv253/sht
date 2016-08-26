@@ -1,3 +1,6 @@
+# Ignore pycache
+__pycache__/*
+
 # Ignore matlab data files
 *.mat
 
