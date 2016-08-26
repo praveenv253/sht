@@ -1,6 +1,4 @@
-function plot_grid(filename)
-	L = 4;
-	load(sprintf('grid_L%d.mat', L));
+function plot_grid(f, thetas, phis)
 
 	x = sin(thetas) .* cos(phis);
 	y = sin(thetas) .* sin(phis);
@@ -9,8 +7,7 @@ function plot_grid(filename)
 	if nargin == 0
 		scatter3(x, y, z, 20, 'b', 'filled');
 	else
-		load(filename);   % This file should define 'f'
-		scatter3(x, y, z, 20, imag(f), 'filled');
+		scatter3(x, y, z, 20, real(f), 'filled');
 	end
 
 	%hold on;
