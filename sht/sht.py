@@ -29,7 +29,7 @@ def _compute_P(thetas):
     return P
 
 
-def sht(f_, thetas, phis, intermediates=None):
+def sht(f, thetas, phis, intermediates=None):
     """
     Computes the spherical harmonic transform of f, for the grid specified by
     thetas and phis. This grid must conform to a specific format.
@@ -37,7 +37,7 @@ def sht(f_, thetas, phis, intermediates=None):
     Currently, f can be at most two dimensional. The first dimension will be
     transformed.
     """
-    f = f_.copy().astype(complex)    # Shouldn't corrupt the original
+    f = f.copy().astype(complex)    # Shouldn't corrupt the original
     L = thetas.size
 
     # Check intermediates for P, and compute it if absent
