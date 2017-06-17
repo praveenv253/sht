@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='sht',
-    version='1.2',
+    version='1.3',
     description='A fast spherical harmonic transform implementation',
     author='Praveen Venkatesh',
     url='https://github.com/praveenv253/sht',
