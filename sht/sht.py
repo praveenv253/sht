@@ -49,6 +49,16 @@ def sht(f, thetas, phis, intermediates=None):
         P = _compute_P(thetas)
         intermediates['P'] = P
 
+    # Compute and store the LU factors of P[m]'s, so that computing the sht
+    # multiple times is inexpensive
+    if intermediates is None:
+        Pm_factors = [la.lu_factor(P[m][m:, :]) for m in range(L)]
+    elif 'Pm_factors' in intermediates:
+        Pm_factors = intermediates['Pm_factors']
+    else:
+        Pm_factors = [la.lu_factor(P[m][m:, :]) for m in range(L)]
+        intermediates['Pm_factors'] = Pm_factors
+
     # Initialize g: for L=4, it looks like this when complete:
     #  0  *  *  *  *  *  *
     #  0  1  *  *  *  * -1
@@ -75,9 +85,9 @@ def sht(f, thetas, phis, intermediates=None):
         g[m, (2*L-1-m):] = temp[m+1:]
 
         # Solve for fm and fm_neg
-        fm = la.solve(P[m][m:, :], g[m:, m])
+        fm = la.lu_solve(Pm_factors[m], g[m:, m])
         if m > 0:
-            fm_neg = la.solve((-1)**m * P[m][m:, :], g[m:, -m])
+            fm_neg = (-1)**m * la.lu_solve(Pm_factors[m], g[m:, -m])
 
         # Store results
         ls = np.arange(m, L)
